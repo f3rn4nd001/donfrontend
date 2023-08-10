@@ -1,0 +1,25 @@
+/* You can add global styles to this file, and also import other style files */
+@import '../node_modules/alertifyjs/build/css/alertify.min.css';
+@import '../node_modules//alertifyjs//build//css/themes/bootstrap.min.css';
+@import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
+
+.colorprimary{
+  background: #ffc107;
+  color: #000000;
+}
+
+body{
+  background:whitesmoke
+}
+@media (max-width: 767px){
+  .destock{
+    display: none;
+  }
+}
+
+@media (min-width: 770px){
+  .movil{
+    display: none;
+  }
+}
+
