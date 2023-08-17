@@ -26,7 +26,7 @@
         </div>
         <div class="card">
             <div class="card-body row ">
-              <ngx-spinner bdColor = "rgba(0, 0, 0, 0.8)" size = "large" color = "#c98989" type = "ball-8bits" [fullScreen] = "false"><p  class="loading  col-12" > </p> <br><h1 style="color: white">Loading... </h1></ngx-spinner>
+              <ngx-spinner class="posiz" bdColor = "rgba(0, 0, 0, 0.8)" size = "large" color = "#c98989" type = "ball-8bits" [fullScreen] = "false"><p  class="  col-12" > </p> <br><h1 style="color: white">Loading... </h1></ngx-spinner>
               <div class="col-md-12 col-lg-5 col-xl-4">
                 <form class="container" [formGroup]="NuevaUsuarioFormGroup" (ngSubmit)="Guardar()">
                     <h3 style="font-family: 1.25em;">Usuario</h3> 
@@ -64,10 +64,17 @@
                              </div>
                              <div class=" mb-3 col-md-12 col-lg-7 col-xl-7">
                                 <mat-form-field appearance="outline" class="movilc">
+                                    <mat-label>Contraseña</mat-label>
+                                    <input type="text" formControlName="Contraseña" id="Contraseña" matInput>
+                                     </mat-form-field>
+                              </div>
+                              <div class=" mb-3 col-md-12 col-lg-7 col-xl-7">
+                                <mat-form-field appearance="outline" class="movilc">
                                     <mat-label>Telefono</mat-label>
                                     <input type="text" formControlName="Telefono" maxlength="13" id="Telefono" matInput>
                                      </mat-form-field>
                               </div>
+                              
                               <hr style="border-top: black solid; opacity: 0.25;">
                             </div>
 

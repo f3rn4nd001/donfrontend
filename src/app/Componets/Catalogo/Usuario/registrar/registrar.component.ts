@@ -3,7 +3,10 @@ import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { AlertServerService } from 'src/app/Services/Alert/alert-server.service';
 import { UsuarioService } from 'src/app/Services/Usuarios/usuario.service';
 import {  DetallesComponent} from "../detalles/detalles.component";
-import {SpinerService} from '../../../../Services/loadin/spiner.service'
+import {SpinerService} from '../../../../Services/loadin/spiner.service';
+import { LoginService } from "../../../../Services/Login/login.service";
+import { MatDialog } from '@angular/material/dialog';
+
 @Component({
   selector: 'app-registrar',
   templateUrl: './registrar.component.html',
@@ -11,25 +14,25 @@ import {SpinerService} from '../../../../Services/loadin/spiner.service'
 })
 export class RegistrarComponent implements OnInit{
   hide = true;
-  
   public ecodUsuarios : any = '';
   public datosUsuario : any = '';
   public datos: any = {};
-
-
   public NuevaUsuarioFormGroup: any = FormGroup;
   public ContraformGroup: any = FormGroup;
   public Generar: any = FormGroup;
-  
-  public validadContras = 1;
+  public validadContras = 0;
   public contenedor: any = {};
   public data:any={};
   public reqdata: any={}
-  
+  public log : any={} 
+
   constructor(
     private _serviceAlert: AlertServerService,
     private _UsuarioService: UsuarioService,
-    private _SpinerService : SpinerService
+    private _SpinerService : SpinerService,
+    private _LoginService : LoginService,
+    private dialog: MatDialog,
+
   ){}
   
   ngOnInit():void{
@@ -48,30 +51,37 @@ export class RegistrarComponent implements OnInit{
      this.annadirinputConcepto();
 
   }
+  
+  validadContrasena(params:any){
+    this.log.contrasena = params
+    this.log.ecodCorreo= localStorage.getItem('ecodCorreo'); 
+    this._LoginService.postValidadContrasena(this.log).then((response:any)=>{
+      this.validadContras = response.valContra.dl;
+    })   
+  }
+
   getEditarRegistro(){
     this._UsuarioService.getDetalle(this.ecodUsuarios).then((response:any)=>{
       this.datosUsuario = (response.sqlusuario);   
-      console.log(this.datosUsuario);
-      
       this.datos.tNombre = this.datosUsuario.tNombre;
       this.datos.tApellido = this.datosUsuario.tApellido;
       this.datos.tRFC = this.datosUsuario.tRFC;
       this.datos.tCURP = this.datosUsuario.tCURP;
       this.datos.correo= response.sqlcorreo;
-
+      
       this.datos.correo.forEach((icarcore:any) => {
-      console.log(icarcore);
       
       });
     })
     localStorage.removeItem('ecod');
     
   }
-  validadContrasena(params:any){}
+  
   annadirinputConcepto(){
     (this.Generar.controls['formArray']).push(new FormGroup({
       'Correo': new FormControl('',Validators.email ),
       'Telefono': new FormControl(''),
+      'Contraseña': new FormControl(''),
     }));
   }
 
@@ -86,22 +96,29 @@ export class RegistrarComponent implements OnInit{
   Guardar(){
     let arrTelefono:any = [];
     let arrCorreo:any = [];
-
     this.Generar.value.formArray.forEach((element:any) => {
       if (element.Telefono != '') {
         arrTelefono.push(element.Telefono);
       }
       if (element.Correo != '') {
-        arrCorreo.push(element.Correo);
+        arrCorreo.push({
+          correo : element.Correo,
+          contraseña:element.Correo
+        });
       }
     });
-
     this._serviceAlert.Guardar().then((response:any)=>{
       if (response == 1) {
         this.data.arrTelefono = arrTelefono
         this.data.arrCorreo = arrCorreo
-        this.data.usuario = this.NuevaUsuarioFormGroup.value
+        this.data.usuario = this.NuevaUsuarioFormGroup.value 
         this._UsuarioService.postRegistrar(this.data).then((response:any)=>{ 
+          this._UsuarioService.getDetalle(response[0].Codigo).then((response:any)=>{
+            let dialogRef = this.dialog.open(DetallesComponent, {
+              data: { titulo: "Detalle de usuario",usuario:response.sqlusuario}
+      
+            });  
+          })
      }).catch((error)=>{});
     }
   })

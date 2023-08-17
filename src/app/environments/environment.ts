@@ -1,6 +1,10 @@
 export const environment = {
     production: true,
-    direcurl:"http://localhost:8000/",
-    tokens : localStorage.getItem('accessToken')
+//    direcurl:"http://192.168.1.67:8000/",
+    direcurl:'http://localhost:8000/',
+    header :{
+        token : localStorage.getItem('logintoken'),
+        ecodCorreo : localStorage.getItem('ecodCorreo')
+    }
   };
   

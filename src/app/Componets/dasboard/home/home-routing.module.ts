@@ -1,15 +1,16 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
-import { ConsultaComponent } from "./consulta.component";
-import { canActivateGuard } from 'src/app/Services/activate/can-activate.guard';
+import { HomeComponent } from "./home.component";
+import {canActivateGuard} from '../../../Services/activate/can-activate.guard';
 const routes:Routes=[
     {
-        path:'',component:ConsultaComponent, canActivate: [canActivateGuard]
+        path:'',component:HomeComponent, canActivate: [canActivateGuard],
+        
     }
 ];
 @NgModule({
     imports:[RouterModule.forChild(routes)],
     exports:[RouterModule]
 })
-export class ConsultaRoutingModule{}
+export class HomeRoutingModule{}

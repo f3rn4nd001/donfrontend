@@ -8,7 +8,7 @@ export class AlertServerService {
 
   constructor() { }
   validaderrores(value:any){
-    if(value==500){
+    if(value.status==500){
       alertify.alert().setting({
         'closable':false,
         'resizable':false,
@@ -16,13 +16,16 @@ export class AlertServerService {
         'message':"Hay un problema en el servidor. "
       }).show();
     }
-    if (value==200) {
+    if (value.status==200) {
+      alertify.set('notifier','position', 'top-right');
       alertify.success("Todo se ha procesado de forma correcta")
     }
-    if (value==202) {
-      alertify.success("La petición ha sido aceptada pero todavía no se ha completado")
+    if (value.status==202) {
+      alertify.set('notifier','position', 'top-center');
+      alertify.success("La petición ha sido aceptada pero :" + value.data.mensaje,8 )
+      
     }
-    if(value==400){
+    if(value.status==400){
       alertify.alert().setting({
         'closable':false,
         'resizable':false,
@@ -30,18 +33,15 @@ export class AlertServerService {
         'message':" Si recibes este error, prueba a refrescar la página o actualizar tu navegador."
       }).show();
     }
-    if(value==401){
-      alertify.alert().setting({
-        'closable':false,
-        'resizable':false,
-        'title':`Algo ha ido mal con la petición.` ,
-        'message':"No tienes permiso para recibir ese contenido."
-      }).show();
-    }
-    if (value==422) {
+    
+    if(value.status==401){
+      alertify.set('notifier','position', 'top-center');
+      alertify.error('Algo ha ido mal con la petición : ' +value.data.mensaje );
+      }
+    if (value.status==422) {
       alertify.error("No pudo procesar las instrucciones contenidas")
     }
-    if(value==503){
+    if(value.status==503){
       alertify.alert().setting({
         'closable':false,
         'resizable':false,
@@ -49,7 +49,7 @@ export class AlertServerService {
         'message':"Prueba de nuevo en unos minutos."
       }).show();
     }
-    if (value==429) {
+    if (value.status==429) {
       alertify.error("Intentelo nuevmente en un minuto");
     }
     

@@ -10,7 +10,8 @@ export class DetallesComponent implements OnInit{
   public title: string = "";
   public usuario:any;
 
-  constructor( public dialogRef: MatDialogRef<DetallesComponent>,    @Inject(MAT_DIALOG_DATA) public data: any){
+  constructor( public dialogRef: MatDialogRef<DetallesComponent>,   
+    @Inject(MAT_DIALOG_DATA) public data: any){
     this.title = this.data.titulo;
     this.usuario =this.data.usuario;
 

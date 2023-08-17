@@ -1,22 +1,18 @@
-import { Component,OnInit,ViewChild } from '@angular/core';
-import { UsuarioService } from "../../../../Services/Usuarios/usuario.service";
+import { Component ,OnInit,ViewChild} from '@angular/core';
 import {MatTableDataSource} from '@angular/material/table';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort,Sort} from '@angular/material/sort';
 import { MatDialog } from '@angular/material/dialog';
-import { DetallesComponent } from '../detalles/detalles.component';
 import { FormControl, FormGroup } from '@angular/forms';
+import { UsuarioService } from "../../../../Services/Usuarios/usuario.service";
 
 @Component({
   selector: 'app-consulta',
   templateUrl: '../../../Plantillas/Consultas/consulta.html',
   styleUrls: ['./consulta.component.css']
 })
-export class ConsultaComponent implements OnInit  {
-  tituloConsulta="dadawdwa";
+export class ConsultaComponent implements OnInit{
   dataSource: any = [];
-  public datos: any = [];
-
   public getdatos: any = {};
   public mostrar = true;
   public filtroForm: any = FormGroup;
@@ -62,11 +58,12 @@ export class ConsultaComponent implements OnInit  {
   constructor(
     private _services:UsuarioService,
     public dialog: MatDialog,
-
   ){}
 
-  ngOnInit(): void {
+  public datos: any = [];
+  public tituloConsulta = "";
 
+  ngOnInit(): void {
     this.datos = localStorage.getItem('Menu');
     JSON.parse(this.datos).forEach((element:any) => {
       if(window.location.pathname ==  element.urlSubMenu){ 
@@ -110,13 +107,7 @@ export class ConsultaComponent implements OnInit  {
   }
 
   getDetalles(data:any){
-    this._services.getDetalle(data).then((response:any)=>{      
-      let dialogRef = this.dialog.open(DetallesComponent, {
-        data: { titulo: "Detalle de usuario",usuario:response.sqlusuario}
-
-      });  
-    })
-  
+   
   }
   filtro(data:any){
     console.log(data);
@@ -133,5 +124,4 @@ export class ConsultaComponent implements OnInit  {
   mostrarfiltro(){
     this.mostrar = !this.mostrar; 
   }
-
 }

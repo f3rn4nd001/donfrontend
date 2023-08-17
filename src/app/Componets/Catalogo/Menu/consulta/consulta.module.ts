@@ -16,15 +16,13 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelect, MatSelectModule } from '@angular/material/select';
 import { MatDatepickerModule, } from "@angular/material/datepicker";
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
-import { DetallesModule } from "../detalles/detalles.module";
 @NgModule({
     declarations:[
         ConsultaComponent,
-        
+    
     ],
     imports:[
     CommonModule,
-    DetallesModule,
     ConsultaRoutingModule,
     MatExpansionModule,
     MatIconModule,
@@ -40,7 +38,6 @@ import { DetallesModule } from "../detalles/detalles.module";
     MatSelectModule,
     MatDatepickerModule,
     MatMomentDateModule
-    ],
-    
+    ]
 })
 export class ConsultaModule{}

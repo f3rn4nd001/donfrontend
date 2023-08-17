@@ -17,11 +17,11 @@ export class UsuarioService {
     var api = `${environment.direcurl}Catalogo/usuario/consulta`;	
     this._SpinerService.llamarspiner();
     return new Promise( ( resolve, reject ) => { 
-			axios.get(api)
+			axios.post(api,{headers:environment.header})
 			.then(response => {        
 					resolve(response.data);  
           this._SpinerService.detenerspiner(); 
-          this._service.validaderrores(response.status);
+          this._service.validaderrores(response);
 			}).catch((error) => {this._service.validaderrores(error.response);
         reject(error);
       });
@@ -31,12 +31,18 @@ export class UsuarioService {
   postRegistrar(data:any){
     let json=JSON.stringify(data);
 		var api = `${environment.direcurl}Catalogo/usuario/registrar`;	
+    this._SpinerService.llamarspiner();
 		return new Promise( ( resolve, reject ) => { 
-			axios.post(api,{datos:JSON.parse(json)})
+			axios.post(api,{datos:JSON.parse(json),headers:environment.header})
 			.then(response => {        
 					resolve(response.data);   
-          this._service.validaderrores(response.status);
-			}).catch((error) => {this._service.validaderrores(error.response);
+          this._SpinerService.detenerspiner(); 
+          this._service.validaderrores(response);
+			}).catch((error) => {
+        console.log(error);
+        
+        this._SpinerService.detenerspiner();
+        this._service.validaderrores(error.response);
         reject(error);
       });
 		});
@@ -47,14 +53,14 @@ export class UsuarioService {
     this._SpinerService.llamarspiner();
     let json=JSON.stringify(data);
 		return new Promise( ( resolve, reject ) => { 
-			axios.post(api,{datos:json})
+			axios.post(api,{datos:json,headers:environment.header})
 			.then(response => {        
 					resolve(response.data);   
           this._SpinerService.detenerspiner();
-          this._service.validaderrores(response.status);
+          this._service.validaderrores(response);
 			}).catch((error) => {          
         this._SpinerService.detenerspiner();
-        this._service.validaderrores(error.response.status);
+        this._service.validaderrores(error.response);
         reject(error);
       });
 		});

@@ -7,6 +7,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import {MatInputModule} from '@angular/material/input'
 import { NgxSpinnerModule } from "ngx-spinner";
+import { DetallesModule } from '../detalles/detalles.module';
 @NgModule({
     declarations:[
         RegistrarComponent,
@@ -14,6 +15,7 @@ import { NgxSpinnerModule } from "ngx-spinner";
     ],
     imports:[
         CommonModule,
+        DetallesModule,
         RegistrarRoutingModule,
         FormsModule,
         ReactiveFormsModule,
