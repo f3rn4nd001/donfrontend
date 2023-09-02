@@ -1,10 +1,10 @@
-
-<div class="modal"  tabindex="-1">
-    <div class="modal-dialog modal-xl">
+<div class="container">
+<div class="modal"  tabindex="-1"  >
+    <div class="modal-dialog modal-xl" style=" padding-left: calc(var(--bs-gutter-x) * 2);">
         <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title center" id="staticBackdropLabel">{{title}}</h1>
-                <button type="button"  [mat-dialog-close]="" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-header ">
+                <h1 class="modal-title  centersaa " id="staticBackdropLabel">{{title}}</h1>
+                <button type="button"  [mat-dialog-close]="" class="btn-close close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <div class="row">
@@ -24,15 +24,52 @@
                     <div class="col-md-1"><strong>FH Creacion</strong></div>
                     <div class="col-md-3"> {{usuario.fhCreacion }} </div>
                 </div>
-                <span layout="row" *ngIf="usuario.estatus != 'Activo'" ><hr flex/></span>         
-                <h3 class="text-primary text-center" *ngIf="usuario.estatus != 'Activo'"><strong>Estatus de eliminacion</strong></h3>
-                <div class="row" *ngIf="usuario.estatus != 'Activo'">
-                  <div class="col-md-2"><strong>usuario: </strong></div>
-                  <div class="col-md-3"> {{usuario.eliminacion}} </div>
-                  <div class="col-md-3"><strong>F. Eliminacion: </strong></div>
-                  <div class="col-md-4"> {{usuario.fhEliminacion}} </div>
-                </div>      
+                <span layout="row" *ngIf="usuario.ecoEdicion !=  null " ><hr flex/></span>         
+                <h3 class="text-primary text-center" *ngIf="usuario.ecoEdicion !=  null "><strong>Estatus de Edicicion</strong></h3>
+                <div class="row" *ngIf="usuario.ecoEdicion !=  null ">
+                  <div class="col-md-1"><strong>Usuario: </strong></div>
+                  <div class="col-md-4"> {{usuario.edicion}} </div>
+                  <div class="col-md-3"></div>
+                  <div class="col-md-1"><strong>Fh. Edicion: </strong></div>
+                  <div class="col-md-3"> {{usuario.fhEdicion}} </div>
+                </div>  
+                <span layout="row" *ngIf="usuario.ecodEliminacion !=  null " ><hr flex/></span>         
+                <h3 class="text-primary text-center" *ngIf="usuario.ecodEliminacion !=  null "><strong>Estatus de Eliminacion</strong></h3>
+                <div class="row" *ngIf="usuario.ecodEliminacion !=  null ">
+                  <div class="col-md-1"><strong>Usuario: </strong></div>
+                  <div class="col-md-4"> {{usuario.eliminacion}} </div>
+                  <div class="col-md-3"></div>
+                  <div class="col-md-1"><strong>Fh. Eliminacion: </strong></div>
+                  <div class="col-md-3"> {{usuario.fhEliminacion}} </div>
+                  <span layout="row"><hr flex/></span>    
+                  <div class="col-md-1"><strong>Motivo: </strong></div>
+                  <div class="col-md-11"> {{usuario.tMotivoEliminacion}} </div>
+                 
+                </div>  
+                
+                <span layout="row" *ngIf="mensjerisqls.length>0" ><hr flex/></span>         
+                <h3 class="text-primary text-center" *ngIf="mensjerisqls.length>0"><strong>Gmails</strong></h3>
+                <div style="overflow-x: auto;"  *ngIf="mensjerisqls.length>0" >
+                    <table  mat-table  [dataSource]="dataSource"  class=" container table table-striped mat-elevation-z8 full-data-table" >      
+                        <ng-container matColumnDef="tCorreo">
+                            <th mat-header-cell *matHeaderCellDef style="text-align: center;" class="colorprimary" ><h4 style="position:relative; ">Correo</h4></th>
+                            <td mat-cell *matCellDef="let element" style="text-align: center; padding: 10px; min-width:16em;" >
+                              <div *ngIf="element.tCorreo == null" >N/A</div><div *ngIf="element.tCorreo != null">{{element.tCorreo}}</div>
+                            </td>
+                          </ng-container>
+                          <ng-container matColumnDef="fhCreacion">
+                            <th mat-header-cell *matHeaderCellDef style="text-align: center;" class="colorprimary" ><h4 style="position:relative; top:-9px;">Fh. Creacion</h4></th>
+                            <td mat-cell *matCellDef="let element" style="text-align: center; padding: 10px; min-width:16em;" >
+                              <div *ngIf="element.fhCreacion == null" >N/A</div><div *ngIf="element.fhCreacion != null">{{element.fhCreacion}}</div>
+                            </td>
+                          </ng-container>
+                          <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+                        <tr mat-row *matRowDef="let row; columns: columnsToDisplay;"></tr>            
+                    </table>
+                </div>
             </div>
         </div>
     </div>
+</div>
+
 </div>

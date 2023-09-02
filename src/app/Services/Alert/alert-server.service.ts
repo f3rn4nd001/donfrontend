@@ -58,7 +58,7 @@ export class AlertServerService {
     alertify.alert().setting({
       'closable':false,
       'resizable':false,
-      'title':`Porfavor corriga los siguientes errores.` ,
+      'title':`Por favor corriga los siguientes errores.` ,
       'message':`${value}`
     }).show();
   }

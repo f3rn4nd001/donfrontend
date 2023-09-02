@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import axios from 'axios';
 import { environment } from 'src/app/environments/environment';
-import { AlertServerService } from '../Alert/alert-server.service';
-import { SpinerService } from "../loadin/spiner.service";
+import { AlertServerService } from '../../Alert/alert-server.service';
+import { SpinerService } from "../../loadin/spiner.service";
 @Injectable({
   providedIn: 'root'
 })
@@ -13,8 +13,25 @@ export class UsuarioService {
     public _SpinerService:SpinerService
 
    ) { }
-   getRegistros(){
+   getRegistros(data:any){    
     var api = `${environment.direcurl}Catalogo/usuario/consulta`;	
+    this._SpinerService.llamarspiner();
+    let json=JSON.stringify(data);
+		return new Promise( ( resolve, reject ) => { 
+			axios.post(api,{datos:json,headers:environment.header})
+			.then(response => {        
+					resolve(response.data);   
+          this._SpinerService.detenerspiner();
+          this._service.validaderrores(response);
+			}).catch((error) => {          
+        this._SpinerService.detenerspiner();
+        this._service.validaderrores(error.response);
+        reject(error);
+      });
+		});
+   }
+   getComprementos(){
+    var api = `${environment.direcurl}Catalogo/usuario/registrar/compremento`;	
     this._SpinerService.llamarspiner();
     return new Promise( ( resolve, reject ) => { 
 			axios.post(api,{headers:environment.header})
@@ -27,7 +44,6 @@ export class UsuarioService {
       });
 		});
    }
-   
   postRegistrar(data:any){
     let json=JSON.stringify(data);
 		var api = `${environment.direcurl}Catalogo/usuario/registrar`;	
@@ -38,9 +54,7 @@ export class UsuarioService {
 					resolve(response.data);   
           this._SpinerService.detenerspiner(); 
           this._service.validaderrores(response);
-			}).catch((error) => {
-        console.log(error);
-        
+			}).catch((error) => {        
         this._SpinerService.detenerspiner();
         this._service.validaderrores(error.response);
         reject(error);

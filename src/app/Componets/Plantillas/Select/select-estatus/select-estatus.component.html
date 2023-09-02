@@ -1,0 +1,12 @@
+<form class="container row" [formGroup]="NuevoMenuFormGroup" >
+    <div class="mb-3 col-md-12 col-lg-6 col-xl-6">
+        <mat-form-field>
+            <mat-label>Estatus</mat-label>
+            <mat-select disableRipple [(ngModel)]="datos.EcodEstatus" formControlName="EcodEstatus" (selectionChange)="selectsa()">
+              <mat-option *ngFor="let food of Estatus" [value]="food.EcodEstatus">
+                {{food.tNombre}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+    </div>
+</form>

@@ -1,0 +1,18 @@
+
+<mat-form-field class="example-full-width" appearance="outline">
+    <mat-label>Menu</mat-label>
+    <input matInput
+           aria-label="Menu"
+           [matAutocomplete]="auto"
+           [formControl]="ecodMenuctl"
+           [(ngModel)]="datos.ecodMenu">
+    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectopcion()" >
+      <mat-option *ngFor="let state of filteredStates | async" [value]="state">
+        <span>{{state.tNombre}}</span> || <span>{{state.ecodMenu}}</span> 
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+  <label *ngIf="datos.tNombre">Menu anterior: {{datos.tNombre}} </label>
+  
+
+  

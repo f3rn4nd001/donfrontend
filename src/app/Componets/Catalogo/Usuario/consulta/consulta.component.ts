@@ -1,5 +1,5 @@
 import { Component,OnInit,ViewChild } from '@angular/core';
-import { UsuarioService } from "../../../../Services/Usuarios/usuario.service";
+import { UsuarioService } from "../../../../Services/Catalogo/Usuarios/usuario.service";
 import {MatTableDataSource} from '@angular/material/table';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort,Sort} from '@angular/material/sort';
@@ -21,37 +21,33 @@ export class ConsultaComponent implements OnInit  {
   public mostrar = true;
   public filtroForm: any = FormGroup;
   public contenedor: any = {};
-  opCliente:any[] = [];
-  botones=[
-    {nombre:'Registrar',relURL:'catalogo/usuario/registrar'},
+  public metodos: any = { eNumeroRegistros: 100, tMetodoOrdenamiento: 'ecodUsuario', orden: 'DESC' };
 
+  opCliente:any[] = [];
+   controller:any[] = [];;
+  botones=[
+    {nombre:'Registrar',relURL:'/catalogo/usuario/registrar'},
   ];
   
   MenuDesplegable=[
-    {nombre:'Registrar',    relURL:'catalogo/usuario/registrar'},
-    {nombre:'Editar',       relURL:'catalogo/usuario/registrar'},
-    {nombre:'Ver detalles', relURL:'catalogo/usuario'},
-  ];
+   {nombre:'Ver detalles', relURL:'catalogo/usuario'},
+   {nombre:'NA',       relURL:'/catalogo/usuario/registrar'},
+   {nombre:'NA',       relURL:'/sistemas/asignasionPermisos'},
+ ];
 
   columns = [
     { columnDef: 'E',             header: 'E',        cell: (element= this.dataSource.ecodUsuario) => `${element.ecodUsuario}`},
-    { columnDef: 'folio',         header: 'Folio',    cell: (element= this.dataSource.ecodUsuario) => `${element.ecodUsuario}`},
+    { columnDef: 'ecodUsuario',         header: 'Folio',    cell: (element= this.dataSource.ecodUsuario) => `${element.ecodUsuario}`},
     { columnDef: 'Estatus',       header: 'Estatus',    cell: (element= this.dataSource.Estatus) => `${element.Estatus}`},
-    { columnDef: 'Nombres',       header: 'Nombres',    cell: (element= this.dataSource.Nombres) => `${element.Nombres}`},
-    { columnDef: 'CURP',          header: 'CURP',    cell: (element= this.dataSource.tCRUP) => `${element.tCRUP}`},
-    { columnDef: 'RFC',           header: 'RFC',    cell: (element= this.dataSource.tRFC) => `${element.tRFC}`},
-    { columnDef: 'Fh. Creacion',  header: 'Fh. Creacion',    cell: (element= this.dataSource.fhCreacion) => `${element.fhCreacion}`},
+    { columnDef: 'nombres',       header: 'Nombres',    cell: (element= this.dataSource.nombres) => `${element.nombres}`},
+    { columnDef: 'tCRUP',          header: 'CURP',    cell: (element= this.dataSource.tCRUP) => `${element.tCRUP}`},
+    { columnDef: 'tRFC',           header: 'RFC',    cell: (element= this.dataSource.tRFC) => `${element.tRFC}`},
+    { columnDef: 'fhCreacion',  header: 'Fh. Creacion',    cell: (element= this.dataSource.fhCreacion) => `${element.fhCreacion}`},
   ]
 
   filtrodatas = [
-    {Nombre : 'ID',         filtroREl:'filtroForm.value.ecodUsuario',   formControlName:'ecodUsuario',  tipos:'text'},
-    {Nombre : 'Estatus',    filtroREl:'filtroForm.value.Estatus',       formControlName:'Estatus',      tipos:'select'},
-    {Nombre : 'Nombres',    filtroREl:'filtroForm.value.Nombres',       formControlName:'Nombres',      tipos:'text'},
-    {Nombre : 'CURP',       filtroREl:'filtroForm.value.tCRUP',         formControlName:'tCRUP',        tipos:'text'},
-    {Nombre : 'RFC',        filtroREl:'filtroForm.value.tRFC',          formControlName:'tRFC',          tipos:'text'},
-    {Nombre : 'Fh. Creacion', filtroREl:'filtroForm.value.fhCreacion',  formControlName:'fhCreacion',   tipos:'date'},
-
-    
+    {Nombre : 'ID',         filtroREl:'filtroForm.value.ecodUsuario',   formControlName:'ecodUsuario',  tipos:'text'},  
+    {Nombre : 'Rfc',         filtroREl:'filtroForm.value.tRFC',   formControlName:'tRFC',  tipos:'text'},
   ]
 
   displayedColumns = this.columns.map(c => c.columnDef);
@@ -66,44 +62,33 @@ export class ConsultaComponent implements OnInit  {
   ){}
 
   ngOnInit(): void {
-
     this.datos = localStorage.getItem('Menu');
     JSON.parse(this.datos).forEach((element:any) => {
       if(window.location.pathname ==  element.urlSubMenu){ 
         this.tituloConsulta = element.submenu;
+        this.controller.push({
+          urlController:element.urlController,
+          Nombres:element.Controller
+        })
       }
     });
 
-    this.getRegistros();
     this.filtroForm = new FormGroup({
       'ecodUsuario': new FormControl('', []),
-      'Estatus': new FormControl('',[]),
-      'tCRUP': new FormControl('', []),
-      'fhCreacion': new FormControl('', []),
-      'Nombres': new FormControl('', []),
       'tRFC': new FormControl('', []),
-    })
+    });
+    this.getRegistros();
   }
 
   getRegistros(){
-    this._services.getRegistros().then((response:any)=>{
-      this.getdatos = (response);
-      this.getdatos.forEach((element:any) => {
-        this.opCliente.push({
-          ecodUsuario:element.ecodUsuario,
-          fhCreacion:element.fhCreacion,
-          tCRUP:element.tCRUP,
-          tRFC:element.tRFC,
-          Nombres:element.Nombres,
-          Estatus:element.Estatus,
-
-        })
-      });    
+    let data:any={};
+    data.metodos=this.metodos;
+    this._services.getRegistros(data).then((response:any)=>{
+      this.getdatos = (response);    
       this.dataSource= new MatTableDataSource(this.getdatos);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
     }).catch((error)=>{});
-
   }
   relparams(data:any){
     localStorage.setItem('ecod', data);
@@ -112,26 +97,22 @@ export class ConsultaComponent implements OnInit  {
   getDetalles(data:any){
     this._services.getDetalle(data).then((response:any)=>{      
       let dialogRef = this.dialog.open(DetallesComponent, {
-        data: { titulo: "Detalle de usuario",usuario:response.sqlusuario}
-
+        data: { titulo: "Detalle de usuario",usuario:response.sqlusuario, gmail:response.sqlgmail}
       });  
     })
   
   }
-  filtro(data:any){
-    console.log(data);
-
-    this.dataSource = this.opCliente.filter(state => state.ecodUsuario.toLowerCase().indexOf( this.filtroForm.value.ecodUsuario.toLowerCase()) >= 0)
-    .filter(state => state.Nombres.toLowerCase().indexOf( this.filtroForm.value.Nombres.toLowerCase()) >= 0)
-    .filter(state => state.tRFC.toLowerCase().indexOf( this.filtroForm.value.tRFC.toLowerCase()) >= 0) 
-    .filter(state => state.tCRUP.toLowerCase().indexOf( this.filtroForm.value.tCRUP.toLowerCase()) >= 0)
-    .filter(state => state.fhCreacion.toLowerCase().indexOf( this.filtroForm.value.fhCreacion.toLowerCase()) >= 0) 
-    .filter(state => state.Estatus.toLowerCase().indexOf( this.filtroForm.value.Estatus.toLowerCase()) >= 0); 
-    
-    
+  filtro(){
+    let data:any={};
+    data.metodos=this.metodos;
+    data.filtros=this.filtroForm.value
+    this._services.getRegistros(data).then((response:any)=>{
+      console.log(response);
+      this.dataSource=response
+   }).catch((error)=>{});
   }
+  
   mostrarfiltro(){
     this.mostrar = !this.mostrar; 
   }
-
 }

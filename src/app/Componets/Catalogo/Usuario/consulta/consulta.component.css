@@ -26,4 +26,7 @@
     color:#98989e;
     cursor:pointer;
   }
+  .posiz{
+    z-index:1
+  }
   

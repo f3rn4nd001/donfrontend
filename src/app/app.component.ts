@@ -21,6 +21,9 @@ export class AppComponent implements OnInit{
       if (res) {
         localStorage.removeItem('logintoken');
         localStorage.removeItem('Menu');
+        localStorage.removeItem('ecodCorreo');
+        localStorage.removeItem('TipoUsuario');
+        localStorage.removeItem('ecod');
         window.location.href = "/login";
       }});
 

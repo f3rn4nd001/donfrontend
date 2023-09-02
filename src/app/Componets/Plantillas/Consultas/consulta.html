@@ -1,111 +1,86 @@
 <div class="resolicion">
-    <div class="container">
-        <div class="sert my-5"> 
-            <nav class="mt-3 navbar navbar-expand-lg colorprimary center">
-                <div class="container-fluid center">
-                    <a class="navbar-brand center"><h1 class="texttitulo">{{tituloConsulta}}</h1></a>
-                </div> 
-            </nav>
-
-            <div class="row">
-              
-                <div style="text-align-last: end" class="mt-3 mb-3">
-                  <button class="btn" (click)="mostrarfiltro()" data-toggle="tooltip" data-placement="right" title="Precione para desplegar los filtros">
-                    <svg version="1.0" xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 512.000000 512.000000" preserveAspectRatio="xMidYMid meet">
-                      <g transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)" fill="#000000" stroke="none">
-                        <path d="M747 4469 c-162 -38 -297 -178 -337 -348 -24 -103 4 -245 68 -339 15 -22 363 -410 774 -862 l748 -822 2 -798 c3 -789 3 -799 24 -826 49 -67 130 -91 195 -60 19 9 221 166 449 349 299 239 420 342 432 367 16 32 18 77 18 502 l0 466 663 729 c364 401 707 778 761 838 110 122 151 194 169 300 29 171 -60 360 -214 452 -112 67 11 63 -1944 62 -1002 -1 -1786 -5 -1808 -10z m3580 -326 c50 -23 80 -91 64 -143 -8 -27 -204 -250 -782 -886 -424 -467 -778 -860 -788 -874 -14 -21 -17 -80 -21 -494 l-5 -469 -230 -188 c-126 -103 -233 -188 -237 -188 -5 -1 -8 290 -8 647 -1 591 -2 650 -18 678 -9 18 -361 411 -782 874 -421 463 -773 856 -782 873 -34 60 -15 131 45 167 31 20 64 20 1770 20 1607 0 1742 -1 1774 -17z"/>
-                      </g>
-                    </svg>
-                  </button> 
-                  <a class="enlace contras" href="{{boton.relURL}}" *ngFor="let boton of botones" style="padding-left:10px;"><button class="btn btn-warning text-white" style="min-width:205px;text-align-last:center" >{{boton.nombre}}</button> </a>
-                </div>
-               
-               
-               
-                <div class="card mb-3 row" style="padding-left:7%; padding-right: 7%;" *ngIf="mostrar == false">
-                  <h3 class="text-primary text-center mt-3 mb-3" ><strong>Filtros</strong></h3>
-                  <form [formGroup]="filtroForm" class=" row">
-                    <div class="col-md-12 col-lg-12 col-xl-12 row">  
-                      <div  *ngFor="let filtrodata of filtrodatas" class="col-4">
-                        <mat-form-field  appearance="outline" style="min-width:205px;" *ngIf="filtrodata.tipos === 'text'">
-                          <mat-label  >{{filtrodata.Nombre}}</mat-label>
-                          <input matInput  (keyup)="filtro(filtrodata.filtroREl)"  id="ecodUsuario"  placeholder="ecodUsuario"  formControlName="{{filtrodata.formControlName}}"> 
-                        </mat-form-field>
-                        <mat-form-field appearance="outline" style="min-width:205px;" *ngIf="filtrodata.tipos === 'select'">
-                          <mat-label>{{filtrodata.Nombre}}</mat-label>
-                          <mat-select (click)="filtro(filtrodata.filtroREl)" formControlName="{{filtrodata.formControlName}}">
-                              <mat-option value=""selected></mat-option>
-                              <mat-option value="Activo">Activo</mat-option>
-                              <mat-option value="Eliminado">Eliminado</mat-option>
-                              <mat-option value="Cancelado">Cancelado</mat-option>
-                              <mat-option value="Terminado">Terminado</mat-option>
-                              <mat-option value="En proceso">En proceso</mat-option>
-                          </mat-select></mat-form-field>
-                          
-
-                          <mat-form-field appearance="outline"  style="min-width:205px;" *ngIf="filtrodata.tipos === 'date'">
-                            <mat-label>{{filtrodata.Nombre}}</mat-label>
-                            <input matInput type="date" (keyup)="filtro(filtrodata.filtroREl)"  id="ecodUsuario"  placeholder="ecodUsuario"  formControlName="{{filtrodata.formControlName}}"> 
-                           
-                          </mat-form-field>
-                        </div>
-                      
-
-                    
-
-                      </div>
-                 
-                
-                  </form>
-
-             </div>
-                <div class="card">
-                    <div class="card-body">
-                      <ngx-spinner bdColor = "rgba(0, 0, 0, 0.8)" size = "large" color = "#c98989" type = "ball-8bits" [fullScreen] = "false"><p  class="loading  col-12" > </p> <br><h1 style="color: white">Loading... </h1></ngx-spinner>
-
-                        <div style="overflow-y: auto; min-height: 350px;">
-                            <table matSort mat-table  [dataSource]="dataSource" class="table ">
-                                <ng-container *ngFor="let column of columns" [matColumnDef]="column.columnDef">
-                      
-                                    <th mat-header-cell *matHeaderCellDef style="align-items: center;"  mat-sort-header sortActionDescription="Sort by {{column}}">
-                                      {{column.header}}
-                                    </th>
-                                    <td mat-cell *matCellDef="let row">
-                                      <div *ngIf="column.header === 'E'" style="max-width: 1px;" >
-                                        <button type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16">
-                                            <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
-                                          </svg>
-                                        </button>
-                                        <ul class="dropdown-menu">
-                                          <li>
-                                              <button class="btn dropdown-item"  *ngFor="let boton of MenuDesplegable"   >
-                                                 <a *ngIf="boton.nombre === 'Ver detalles'" (click)="getDetalles(column.cell(row))">{{boton.nombre}}</a>
-                                                 <a *ngIf="boton.nombre != 'Ver detalles'" (click)="relparams(column.cell(row))" href="{{boton.relURL}}">{{boton.nombre}}</a>
-                                              </button> 
-
-                                           </li>
-                                        </ul>
-                                      </div>
-                                      <div *ngIf="column.header != 'E'"  > 
-                                        {{column.cell(row)}}
-                                  
-                                      </div>
-                                    
-                                    </td>
-                                    
-                                  </ng-container>
-                                  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                                  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-                            </table>
-                            <mat-paginator color="primary" style="background:#FFC107 ;" #paginator [pageSize]="10" showFirstLastButtons   [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
-
-                        </div>
-                        
-                    </div>
-                </div>
-
-            </div>   
+  <div class="container">
+    <div class="sert my-3" style=" padding-left: calc(var(--bs-gutter-x) * 2);"> 
+      <nav class="mt-1 navbar navbar-expand-lg colorprimary center">
+        <div class="container-fluid center">
+          <a class="navbar-brand center"><h1 class="texttitulo">{{tituloConsulta}}</h1></a>
+        </div> 
+      </nav>
+      <div class="row">
+        <div style="text-align-last: end" class="mt-3 mb-3">
+          <button class="btn" (click)="mostrarfiltro()" data-toggle="tooltip" data-placement="right" title="Precione para desplegar los filtros">
+            <svg version="1.0" xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 512.000000 512.000000" preserveAspectRatio="xMidYMid meet">
+              <g transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)" fill="#000000" stroke="none">
+                <path d="M747 4469 c-162 -38 -297 -178 -337 -348 -24 -103 4 -245 68 -339 15 -22 363 -410 774 -862 l748 -822 2 -798 c3 -789 3 -799 24 -826 49 -67 130 -91 195 -60 19 9 221 166 449 349 299 239 420 342 432 367 16 32 18 77 18 502 l0 466 663 729 c364 401 707 778 761 838 110 122 151 194 169 300 29 171 -60 360 -214 452 -112 67 11 63 -1944 62 -1002 -1 -1786 -5 -1808 -10z m3580 -326 c50 -23 80 -91 64 -143 -8 -27 -204 -250 -782 -886 -424 -467 -778 -860 -788 -874 -14 -21 -17 -80 -21 -494 l-5 -469 -230 -188 c-126 -103 -233 -188 -237 -188 -5 -1 -8 290 -8 647 -1 591 -2 650 -18 678 -9 18 -361 411 -782 874 -421 463 -773 856 -782 873 -34 60 -15 131 45 167 31 20 64 20 1770 20 1607 0 1742 -1 1774 -17z"/>
+              </g>
+            </svg>
+          </button> 
+          <button class="btn btn-warning text-white" style="min-width:205px;text-align-last:center" (click)="filtro()">Filtrar</button>
+          <a *ngFor="let boton of botones"> 
+            <a *ngFor="let control of controller">
+              <a *ngIf="control.urlController===boton.relURL" class="enlace contras" href="{{boton.relURL}}" style="padding-left:10px;"><button class="btn btn-warning text-white" style="min-width:205px;text-align-last:center" >{{boton.nombre}}</button> </a>
+            </a> 
+          </a>
         </div>
+        <div class="card mb-3 row"  *ngIf="mostrar == false">
+          <h3 class="text-primary text-center mt-3 mb-3" ><strong>Filtros</strong></h3>
+          <form [formGroup]="filtroForm" class=" row">
+            <div class="row">  
+              <div *ngFor="let filtrodata of filtrodatas" class="col-12 col-sm-12 col-md-6 col-lg-4 col-xl-3">
+                <mat-form-field appearance="outline" style="min-width: 100%;" *ngIf="filtrodata.tipos === 'text'">
+                  <mat-label>{{filtrodata.Nombre}}</mat-label>
+                  <input matInput formControlName="{{filtrodata.formControlName}}"> 
+                </mat-form-field>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="card">
+          <div class="card-body">
+            <ngx-spinner class="posiz" bdColor="rgba(0, 0, 0, 0.8)" size="large" color="#c98989" type="ball-8bits" [fullScreen]="false"><p  class="loading  col-12" > </p> <br><h1 style="color: white">Loading... </h1></ngx-spinner>
+            <div style="overflow-y: auto; min-height: 350px;">
+              <table matSort mat-table  [dataSource]="dataSource" class="table ">
+                <ng-container *ngFor="let column of columns" [matColumnDef]="column.columnDef">        
+                  <th mat-header-cell *matHeaderCellDef style="align-items: center;"  mat-sort-header sortActionDescription="Sort by {{column}}">{{column.header}}</th>
+                  <td mat-cell *matCellDef="let row">
+                    <div *ngIf="column.header === 'E'" style="max-width: 1px;" >
+                      <button  type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16">
+                          <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+                        </svg>
+                      </button>
+                      <ul class="dropdown-menu">
+                        <li>
+                         
+                          <button class="btn dropdown-item"  *ngFor="let boton of MenuDesplegable" >
+                            <a class="enlace" *ngIf="boton.nombre === 'Ver detalles'" (click)="getDetalles(column.cell(row))">{{boton.nombre}}</a>
+                            <div *ngIf="(boton.nombre != 'Ver detalles') && (row.Estatus !='Eliminado')">
+                              <div *ngFor="let control of controller">
+                                <a class="enlace"*ngIf="control.urlController===boton.relURL" (click)="relparams(column.cell(row))" href="{{control.urlController}}">{{control.Nombres}}</a>
+                              </div>
+                            </div>
+                          </button> 
+                        </li>
+                      </ul>
+                    </div>
+                    <div *ngIf="column.header != 'E'"> 
+                      <div *ngIf="column.header != 'Iconos'">
+                        {{column.cell(row)}}
+                      </div>
+                      <div *ngIf="column.header == 'Iconos'">
+                        <i class="{{column.cell(row)}}"></i>
+                      </div>
+                    </div>                                    
+                  </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+              </table>
+              <mat-paginator color="primary" style="background:#FFC107 ;" #paginator [pageSize]="10" showFirstLastButtons   [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+            </div>
+          </div>
+        </div>
+      </div>   
     </div>
+  </div>
 </div>

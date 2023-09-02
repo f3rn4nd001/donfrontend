@@ -8,6 +8,11 @@ import { MatIconModule } from '@angular/material/icon';
 import {MatInputModule} from '@angular/material/input'
 import { NgxSpinnerModule } from "ngx-spinner";
 import { DetallesModule } from '../detalles/detalles.module';
+import {MatTabsModule} from '@angular/material/tabs';
+import { MatAutocompleteModule } from "@angular/material/autocomplete";
+import { MatSelectModule } from '@angular/material/select';
+import { MatTooltipModule } from '@angular/material/tooltip';
+
 @NgModule({
     declarations:[
         RegistrarComponent,
@@ -23,6 +28,10 @@ import { DetallesModule } from '../detalles/detalles.module';
         MatIconModule,
         MatInputModule,
         NgxSpinnerModule,
+        MatTabsModule,
+        MatAutocompleteModule,
+        MatSelectModule,
+        MatTooltipModule
     ]
 })
 export class RegistrarModule{}

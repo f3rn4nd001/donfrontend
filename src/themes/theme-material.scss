@@ -2,7 +2,7 @@
 
 @include mat.core();
 
-$my-primary: mat.define-palette(mat.$amber-palette, 500);
+$my-primary: mat.define-palette(mat.$blue-palette, 500);
 $my-accent: mat.define-palette(mat.$amber-palette, 500);
 
 $my-theme: mat.define-light-theme((

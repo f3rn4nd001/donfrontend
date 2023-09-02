@@ -4,50 +4,40 @@ import {MatPaginator} from '@angular/material/paginator';
 import {MatSort,Sort} from '@angular/material/sort';
 import { MatDialog } from '@angular/material/dialog';
 import { FormControl, FormGroup } from '@angular/forms';
-import { UsuarioService } from "../../../../Services/Usuarios/usuario.service";
+import { MenuService } from "../../../../Services/Catalogo/Menu/menu.service";
+import { DetallesComponent } from '../detalles/detalles.component';
 
 @Component({
   selector: 'app-consulta',
   templateUrl: '../../../Plantillas/Consultas/consulta.html',
   styleUrls: ['./consulta.component.css']
 })
+
 export class ConsultaComponent implements OnInit{
+  tituloConsulta="";
   dataSource: any = [];
+  controller:any[] = [];
+  public datos: any = [];
   public getdatos: any = {};
   public mostrar = true;
   public filtroForm: any = FormGroup;
   public contenedor: any = {};
-  opCliente:any[] = [];
-  botones=[
-    {nombre:'Registrar',relURL:'catalogo/usuario/registrar'},
+  public metodos: any = {eNumeroRegistros:100, tMetodoOrdenamiento:'ecodMenu', orden:'DESC' };
 
-  ];
-  
-  MenuDesplegable=[
-    {nombre:'Registrar',    relURL:'catalogo/usuario/registrar'},
-    {nombre:'Editar',       relURL:'catalogo/usuario/registrar'},
-    {nombre:'Ver detalles', relURL:'catalogo/usuario'},
-  ];
+  botones=[{nombre:'Registrar',relURL:'/catalogo/menu/registrar'}];
+
+  MenuDesplegable=[{nombre:'Ver detalles', relURL:'catalogo/menu'},{nombre:'N/A', relURL:'/catalogo/menu/registrar'}];
 
   columns = [
-    { columnDef: 'E',             header: 'E',        cell: (element= this.dataSource.ecodUsuario) => `${element.ecodUsuario}`},
-    { columnDef: 'folio',         header: 'Folio',    cell: (element= this.dataSource.ecodUsuario) => `${element.ecodUsuario}`},
-    { columnDef: 'Estatus',       header: 'Estatus',    cell: (element= this.dataSource.Estatus) => `${element.Estatus}`},
-    { columnDef: 'Nombres',       header: 'Nombres',    cell: (element= this.dataSource.Nombres) => `${element.Nombres}`},
-    { columnDef: 'CURP',          header: 'CURP',    cell: (element= this.dataSource.tCRUP) => `${element.tCRUP}`},
-    { columnDef: 'RFC',           header: 'RFC',    cell: (element= this.dataSource.tRFC) => `${element.tRFC}`},
-    { columnDef: 'Fh. Creacion',  header: 'Fh. Creacion',    cell: (element= this.dataSource.fhCreacion) => `${element.fhCreacion}`},
+    { columnDef: 'E',         header: 'E',         cell: (element= this.dataSource.ecodMenu) => `${element.ecodMenu}`},
+    { columnDef: 'ecodMenu',  header: 'Folio',     cell: (element= this.dataSource.ecodMenu) => `${element.ecodMenu}`},
+    { columnDef: 'tNombre',   header: 'Nombre',    cell: (element= this.dataSource.tNombre) => `${element.tNombre}`},
+    { columnDef: 'Iconos',    header: 'Iconos',    cell: (element= this.dataSource.Iconos) => `${element.Iconos}`},
   ]
 
   filtrodatas = [
-    {Nombre : 'ID',         filtroREl:'filtroForm.value.ecodUsuario',   formControlName:'ecodUsuario',  tipos:'text'},
-    {Nombre : 'Estatus',    filtroREl:'filtroForm.value.Estatus',       formControlName:'Estatus',      tipos:'select'},
-    {Nombre : 'Nombres',    filtroREl:'filtroForm.value.Nombres',       formControlName:'Nombres',      tipos:'text'},
-    {Nombre : 'CURP',       filtroREl:'filtroForm.value.tCRUP',         formControlName:'tCRUP',        tipos:'text'},
-    {Nombre : 'RFC',        filtroREl:'filtroForm.value.tRFC',          formControlName:'tRFC',          tipos:'text'},
-    {Nombre : 'Fh. Creacion', filtroREl:'filtroForm.value.fhCreacion',  formControlName:'fhCreacion',   tipos:'date'},
-
-    
+    {Nombre : 'ID',       filtroREl:'filtroForm.value.ecodMenu',  formControlName:'ecodMenu', tipos:'text'},  
+    {Nombre : 'Nombre',   filtroREl:'filtroForm.value.tNombre',   formControlName:'tNombre',  tipos:'text'},  
   ]
 
   displayedColumns = this.columns.map(c => c.columnDef);
@@ -55,73 +45,58 @@ export class ConsultaComponent implements OnInit{
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild('paginator') paginator!: MatPaginator;
 
-  constructor(
-    private _services:UsuarioService,
-    public dialog: MatDialog,
-  ){}
-
-  public datos: any = [];
-  public tituloConsulta = "";
+  constructor(private _MenuService:MenuService,public dialog: MatDialog){}
 
   ngOnInit(): void {
     this.datos = localStorage.getItem('Menu');
     JSON.parse(this.datos).forEach((element:any) => {
-      if(window.location.pathname ==  element.urlSubMenu){ 
+      if(window.location.pathname == element.urlSubMenu){ 
         this.tituloConsulta = element.submenu;
+        this.controller.push({
+          urlController:element.urlController,
+          Nombres:element.Controller
+        })
       }
     });
 
-    this.getRegistros();
     this.filtroForm = new FormGroup({
-      'ecodUsuario': new FormControl('', []),
-      'Estatus': new FormControl('',[]),
-      'tCRUP': new FormControl('', []),
-      'fhCreacion': new FormControl('', []),
-      'Nombres': new FormControl('', []),
-      'tRFC': new FormControl('', []),
-    })
+      'ecodMenu': new FormControl('', []),
+      'tNombre': new FormControl('', []),
+    });
+    this.getRegistros();
   }
 
   getRegistros(){
-    this._services.getRegistros().then((response:any)=>{
-      this.getdatos = (response);
-      this.getdatos.forEach((element:any) => {
-        this.opCliente.push({
-          ecodUsuario:element.ecodUsuario,
-          fhCreacion:element.fhCreacion,
-          tCRUP:element.tCRUP,
-          tRFC:element.tRFC,
-          Nombres:element.Nombres,
-          Estatus:element.Estatus,
-
-        })
-      });    
+    let data:any={};
+    data.metodos=this.metodos;
+    this._MenuService.getRegistros(data).then((response:any)=>{
+      this.getdatos = (response);    
       this.dataSource= new MatTableDataSource(this.getdatos);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
     }).catch((error)=>{});
-
   }
+  
   relparams(data:any){
     localStorage.setItem('ecod', data);
   }
 
   getDetalles(data:any){
-   
+    this._MenuService.getDetalle(data).then((response:any)=>{      
+      let dialogRef = this.dialog.open(DetallesComponent, {
+        data: {  titulo: "Detalle de Menu",Menu:response.sqlMenu}
+      });  
+    })
   }
-  filtro(data:any){
-    console.log(data);
-
-    this.dataSource = this.opCliente.filter(state => state.ecodUsuario.toLowerCase().indexOf( this.filtroForm.value.ecodUsuario.toLowerCase()) >= 0)
-    .filter(state => state.Nombres.toLowerCase().indexOf( this.filtroForm.value.Nombres.toLowerCase()) >= 0)
-    .filter(state => state.tRFC.toLowerCase().indexOf( this.filtroForm.value.tRFC.toLowerCase()) >= 0) 
-    .filter(state => state.tCRUP.toLowerCase().indexOf( this.filtroForm.value.tCRUP.toLowerCase()) >= 0)
-    .filter(state => state.fhCreacion.toLowerCase().indexOf( this.filtroForm.value.fhCreacion.toLowerCase()) >= 0) 
-    .filter(state => state.Estatus.toLowerCase().indexOf( this.filtroForm.value.Estatus.toLowerCase()) >= 0); 
-    
-    
+  
+  filtro(){
+    let data:any={};
+    data.metodos=this.metodos;
+    data.filtros=this.filtroForm.value
+    this._MenuService.getRegistros(data).then((response:any)=>{
+      this.dataSource=response
+    }).catch((error)=>{});
   }
-  mostrarfiltro(){
-    this.mostrar = !this.mostrar; 
-  }
+  
+  mostrarfiltro(){this.mostrar = !this.mostrar;}
 }
