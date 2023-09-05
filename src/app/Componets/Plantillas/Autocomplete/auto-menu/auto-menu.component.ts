@@ -10,7 +10,6 @@ import { MenuService } from "../../../../Services/Catalogo/Menu/menu.service";
 })
 
 export class AutoMenuComponent implements OnInit {
-
   ecodMenuctl = new FormControl('');
   filteredStates: Observable<any[]>;
   public datos: any = {};
@@ -20,7 +19,7 @@ export class AutoMenuComponent implements OnInit {
   constructor(
     private _ServicesService:ServicesService,
     private _MenuService:MenuService
-    ) {
+  ) {
     this.filteredStates = this.ecodMenuctl.valueChanges.pipe(startWith(''),map(state => (state ? this._filterStates(state) : this.states.slice())),);
   }
 
@@ -28,10 +27,7 @@ export class AutoMenuComponent implements OnInit {
     this._ServicesService.diaparadorAutocomprit.subscribe(res=>{
       if (res.ecodMenu ) {this.datos.ecodMenu=res.ecodMenu.ecodMenu;}
       if (res.Menu ) {this.datos.tNombre=res.ecodMenu.Menu;}
-
-    });     
-    console.log(this.datos);
-    
+    });         
     let data:any={};
     data.metodos=this.metodos;
     this._MenuService.getRegistros(data).then((response:any)=>{      
@@ -43,14 +39,11 @@ export class AutoMenuComponent implements OnInit {
         })        
       });
     })    
-    
   }
 
   displayStates(data: any): string {return data ? data.tNombre  : data;}
 
-  selectopcion(){  
-    console.log(this.ecodMenuctl.value);
-    
+  selectopcion(){      
     this._ServicesService.diaparadorAutocomprit.emit({ecodMenu:this.ecodMenuctl.value})    
   }
 

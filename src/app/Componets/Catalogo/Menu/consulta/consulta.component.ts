@@ -6,7 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MenuService } from "../../../../Services/Catalogo/Menu/menu.service";
 import { DetallesComponent } from '../detalles/detalles.component';
-
+import { LoginService } from "../../../../Services/Login/login.service";
 @Component({
   selector: 'app-consulta',
   templateUrl: '../../../Plantillas/Consultas/consulta.html',
@@ -18,6 +18,7 @@ export class ConsultaComponent implements OnInit{
   dataSource: any = [];
   controller:any[] = [];
   public datos: any = [];
+  public tokenUrl: any = [];
   public getdatos: any = {};
   public mostrar = true;
   public filtroForm: any = FormGroup;
@@ -45,13 +46,13 @@ export class ConsultaComponent implements OnInit{
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild('paginator') paginator!: MatPaginator;
 
-  constructor(private _MenuService:MenuService,public dialog: MatDialog){}
+  constructor(private _MenuService:MenuService,public dialog: MatDialog,private _LoginService:LoginService){}
 
   ngOnInit(): void {
     this.datos = localStorage.getItem('Menu');
     JSON.parse(this.datos).forEach((element:any) => {
       if(window.location.pathname == element.urlSubMenu){ 
-        this.tituloConsulta = element.submenu;
+        this.tituloConsulta = element.submenu;        
         this.controller.push({
           urlController:element.urlController,
           Nombres:element.Controller

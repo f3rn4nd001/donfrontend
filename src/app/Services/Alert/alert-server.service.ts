@@ -37,6 +37,17 @@ export class AlertServerService {
     if(value.status==401){
       alertify.set('notifier','position', 'top-center');
       alertify.error('Algo ha ido mal con la petición : ' +value.data.mensaje );
+      if (value.data.mensaje == "Token invalido, Inicie sesion nuevamente") {
+    
+        setTimeout(function(){       
+        localStorage.removeItem('logintoken');
+        localStorage.removeItem('Menu');
+        localStorage.removeItem('ecodCorreo');
+        localStorage.removeItem('TipoUsuario');
+        localStorage.removeItem('ecod');
+        window.location.href = "/login";
+        }, 2000);
+      }
       }
     if (value.status==422) {
       alertify.error("No pudo procesar las instrucciones contenidas")

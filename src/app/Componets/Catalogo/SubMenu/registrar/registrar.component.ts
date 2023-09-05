@@ -30,7 +30,8 @@ export class RegistrarComponent implements OnInit {
     private _ServicesService:ServicesService,
     private _UsuarioService:UsuarioService,  
     private _SubmenuService:SubmenuService
-  ){  }
+  ){}
+
   ngOnInit(): void {
     this.ecodSubmenu = localStorage.getItem('ecod');  
     if (this.ecodSubmenu) {
@@ -77,7 +78,7 @@ export class RegistrarComponent implements OnInit {
     })   
   }
   reConsulta(){
-    this.router.navigate(['catalogo/submenu']);
+    window.location.href = "catalogo/submenu";
   }
 
   Guardar(){      
@@ -98,10 +99,7 @@ export class RegistrarComponent implements OnInit {
             this.data.SubMenu.ecodSubmenu = this.ecodSubmenu
             this.data.ecodMenu=this.datos.ecodMenu;
             this._SubmenuService.postRegistrar(this.data).then((response:any)=>{   
-              
               this._SubmenuService.getDetalle(response.responseSubMenu.Codigo).then((response:any)=>{
-
-
               })              
             })
           }

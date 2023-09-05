@@ -38,4 +38,32 @@ export class LoginService {
       });
 		});
   }
+
+  
+  postLogout(data:any){
+    var api = `${environment.direcurl}api/Login/postLogout`;	
+    let json=JSON.stringify(data);
+		return new Promise( ( resolve, reject ) => { 
+			axios.post(api,{datos:json,headers:environment.header})
+			.then(response => {        
+					resolve(response.data);   
+			}).catch((error) => {          
+        reject(error);
+      });
+		});
+  }
+
+
+  postValidadUrl(data:any){
+    var api = `${environment.direcurl}api/Login/postValidadVista`;	
+    let json=JSON.stringify(data);
+		return new Promise( ( resolve, reject ) => { 
+			axios.post(api,{datos:json,headers:environment.header})
+			.then(response => {        
+					resolve(response.data);   
+			}).catch((error) => {          
+        reject(error);
+      });
+		});
+  }
 }

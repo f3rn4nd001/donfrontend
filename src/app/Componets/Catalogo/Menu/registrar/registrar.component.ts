@@ -71,7 +71,7 @@ export class RegistrarComponent implements OnInit{
   }
 
   reConsulta(){
-    this.router.navigate(['catalogo/menu']);
+    window.location.href ='catalogo/menu';
   }
 
   Guardar(){

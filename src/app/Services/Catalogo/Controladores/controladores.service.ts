@@ -30,5 +30,21 @@ export class ControladoresService {
       });
     });
   }
-
+  postRegistrar(data:any){
+    let json=JSON.stringify(data);
+		var api = `${environment.direcurl}Catalogo/controllers/registrar`;	
+    this._SpinerService.llamarspiner();
+		return new Promise( ( resolve, reject ) => { 
+			axios.post(api,{datos:JSON.parse(json),headers:environment.header})
+			.then(response => {        
+					resolve(response.data);   
+          this._SpinerService.detenerspiner(); 
+          this._service.validaderrores(response);
+			}).catch((error) => {        
+        this._SpinerService.detenerspiner();
+        this._service.validaderrores(error.response);
+        reject(error);
+      });
+		});
+  }
 }
