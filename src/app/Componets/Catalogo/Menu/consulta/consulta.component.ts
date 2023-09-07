@@ -4,9 +4,9 @@ import {MatPaginator} from '@angular/material/paginator';
 import {MatSort,Sort} from '@angular/material/sort';
 import { MatDialog } from '@angular/material/dialog';
 import { FormControl, FormGroup } from '@angular/forms';
-import { MenuService } from "../../../../Services/Catalogo/Menu/menu.service";
 import { DetallesComponent } from '../detalles/detalles.component';
 import { LoginService } from "../../../../Services/Login/login.service";
+import { GenerarService } from "../../../../Services/Catalogo/Generar/generar.service";
 @Component({
   selector: 'app-consulta',
   templateUrl: '../../../Plantillas/Consultas/consulta.html',
@@ -24,6 +24,7 @@ export class ConsultaComponent implements OnInit{
   public filtroForm: any = FormGroup;
   public contenedor: any = {};
   public metodos: any = {eNumeroRegistros:100, tMetodoOrdenamiento:'ecodMenu', orden:'DESC' };
+  public envio: any = {};
 
   botones=[{nombre:'Registrar',relURL:'/catalogo/menu/registrar'}];
 
@@ -46,7 +47,7 @@ export class ConsultaComponent implements OnInit{
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild('paginator') paginator!: MatPaginator;
 
-  constructor(private _MenuService:MenuService,public dialog: MatDialog,private _LoginService:LoginService){}
+  constructor(public dialog: MatDialog, private _GenerarService:GenerarService){}
 
   ngOnInit(): void {
     this.datos = localStorage.getItem('Menu');
@@ -68,9 +69,9 @@ export class ConsultaComponent implements OnInit{
   }
 
   getRegistros(){
-    let data:any={};
-    data.metodos=this.metodos;
-    this._MenuService.getRegistros(data).then((response:any)=>{
+    this.envio.metodos=this.metodos;
+    this.envio.urls="Catalogo/menu/consulta";
+    this._GenerarService.getRegistros(this.envio).then((response:any)=>{
       this.getdatos = (response);    
       this.dataSource= new MatTableDataSource(this.getdatos);
       this.dataSource.paginator = this.paginator;
@@ -83,7 +84,9 @@ export class ConsultaComponent implements OnInit{
   }
 
   getDetalles(data:any){
-    this._MenuService.getDetalle(data).then((response:any)=>{      
+    this.envio.data=data
+    this.envio.urls="Catalogo/menu/detalles";
+    this._GenerarService.getDetalle(this.envio).then((response:any)=>{      
       let dialogRef = this.dialog.open(DetallesComponent, {
         data: {  titulo: "Detalle de Menu",Menu:response.sqlMenu}
       });  
@@ -91,10 +94,10 @@ export class ConsultaComponent implements OnInit{
   }
   
   filtro(){
-    let data:any={};
-    data.metodos=this.metodos;
-    data.filtros=this.filtroForm.value
-    this._MenuService.getRegistros(data).then((response:any)=>{
+    this.envio.metodos=this.metodos;
+    this.envio.urls="Catalogo/menu/consulta";
+    this.envio.filtros=this.filtroForm.value
+    this._GenerarService.getRegistros(this.envio).then((response:any)=>{
       this.dataSource=response
     }).catch((error)=>{});
   }

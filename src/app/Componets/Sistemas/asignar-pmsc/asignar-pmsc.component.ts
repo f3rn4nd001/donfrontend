@@ -1,6 +1,4 @@
 import { Component,OnInit } from '@angular/core';
-import { UsuarioService } from "../../../Services/Catalogo/Usuarios/usuario.service";
-import { MenuService } from "../../../Services/Catalogo/Menu/menu.service";
 @Component({
   selector: 'app-asignar-pmsc',
   templateUrl: './asignar-pmsc.component.html',
@@ -10,8 +8,6 @@ export class AsignarPMSCComponent  implements OnInit{
   public ecodUsuarios : any = '';
 
   constructor(
-    private _UsuarioService:UsuarioService,
-    private _MenuService:MenuService
   ){}
   
   ngOnInit(): void {
@@ -28,8 +24,6 @@ export class AsignarPMSCComponent  implements OnInit{
       console.log(response.sqlusuario); 
     });*/
     let data = {};
-    this._MenuService.getRegistros(data).then((response:any)=>{ 
-    
-    }); 
+  
   }
 }

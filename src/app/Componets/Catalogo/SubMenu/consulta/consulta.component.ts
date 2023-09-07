@@ -6,7 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { FormControl, FormGroup } from '@angular/forms';
 import { SubmenuService } from "../../../../Services/Catalogo/SubMenu/submenu.service";
 import { DetallesComponent } from '../detalles/detalles.component';
-
+import { GenerarService } from "../../../../Services/Catalogo/Generar/generar.service";
 @Component({
   selector: 'app-consulta',
   templateUrl: '../../../Plantillas/Consultas/consulta.html',
@@ -22,6 +22,7 @@ export class ConsultaComponent implements OnInit{
   public filtroForm: any = FormGroup;
   public contenedor: any = {};
   public metodos: any = { eNumeroRegistros: 100, tMetodoOrdenamiento: 'ecodSubmenu', orden: 'DESC' };
+  public envio: any = {};
 
   controller:any[] = [];;
   botones=[
@@ -54,7 +55,7 @@ export class ConsultaComponent implements OnInit{
   constructor(
     private _SubmenuService:SubmenuService,
     public dialog: MatDialog,
-
+    public _GenerarService:GenerarService
   ){}
 
   ngOnInit(): void {
@@ -78,9 +79,9 @@ export class ConsultaComponent implements OnInit{
   }
 
   getRegistros(){
-    let data:any={};
-    data.metodos=this.metodos;
-    this._SubmenuService.getRegistros(data).then((response:any)=>{
+    this.envio.metodos=this.metodos;
+    this.envio.urls="Catalogo/submenu/consulta";
+    this._GenerarService.getRegistros(this.envio).then((response:any)=>{
       this.getdatos = (response);    
       this.dataSource= new MatTableDataSource(this.getdatos);
       this.dataSource.paginator = this.paginator;
@@ -92,21 +93,24 @@ export class ConsultaComponent implements OnInit{
   }
 
   getDetalles(data:any){
-    this._SubmenuService.getDetalle(data).then((response:any)=>{      
+    this.envio.data=data
+    this.envio.urls="Catalogo/submenu/detalles";
+    this._GenerarService.getDetalle(this.envio).then((response:any)=>{      
       let dialogRef = this.dialog.open(DetallesComponent, {
         data: {  titulo: "Detalle de Sub menu",sqlsubMen:response.sqlsubMenu,sqlrelsubmenucontroller:response.sqlrelsubmenucontroller}
       });  
     })
   }
+  
   filtro(){
-    let data:any={};
-    data.metodos=this.metodos;
-    data.filtros=this.filtroForm.value
-    this._SubmenuService.getRegistros(data).then((response:any)=>{
+    this.envio.metodos=this.metodos;
+    this.envio.urls="Catalogo/submenu/consulta";
+    this.envio.filtros=this.filtroForm.value
+    this._SubmenuService.getRegistros(this.envio).then((response:any)=>{
       this.dataSource=response
    }).catch((error)=>{});
-  
-     }
+  }
+
   mostrarfiltro(){
     this.mostrar = !this.mostrar; 
   }

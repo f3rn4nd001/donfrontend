@@ -6,6 +6,7 @@ import { AlertServerService } from 'src/app/Services/Alert/alert-server.service'
 import { ServicesService } from "../../../Plantillas/services/services.service";
 import { UsuarioService } from 'src/app/Services/Catalogo/Usuarios/usuario.service';
 import { SubmenuService } from "../../../../Services/Catalogo/SubMenu/submenu.service";
+import { GenerarService } from "../../../../Services/Catalogo/Generar/generar.service";
 @Component({
   selector: 'app-registrar',
   templateUrl: './registrar.component.html',
@@ -22,6 +23,7 @@ export class RegistrarComponent implements OnInit {
   public datos: any = {};
   public Estatus:any=[];
   public data:any={};
+  public envio: any = {};
 
   constructor(
     private _LoginService : LoginService,
@@ -29,7 +31,8 @@ export class RegistrarComponent implements OnInit {
     private _serviceAlert: AlertServerService,
     private _ServicesService:ServicesService,
     private _UsuarioService:UsuarioService,  
-    private _SubmenuService:SubmenuService
+    private _SubmenuService:SubmenuService,
+    private _GenerarService:GenerarService
   ){}
 
   ngOnInit(): void {
@@ -50,7 +53,9 @@ export class RegistrarComponent implements OnInit {
      
   }
   getEditarRegistro(){
-    this._SubmenuService.getDetalle(this.ecodSubmenu).then((response:any)=>{  
+    this.envio.data=this.ecodSubmenu
+    this.envio.urls="Catalogo/submenu/detalles";
+    this._GenerarService.getDetalle(this.envio).then((response:any)=>{  
       this.datos.tNombre = response.sqlsubMenu.tNombre;        
       this.datos.tUrl = response.sqlsubMenu.tUrl;
       this.datos.ecodRelMenuSubMenuController=response.sqlrelsubmenucontroller.ecodRelMenuSubMenuController;        
@@ -59,9 +64,7 @@ export class RegistrarComponent implements OnInit {
         EcodEstatus:response.sqlsubMenu.ecodEstatus,
         Menu:response.sqlrelsubmenucontroller.Menu,
       }); 
-
-      });
-
+    });
     localStorage.removeItem('ecod');    
   }
 

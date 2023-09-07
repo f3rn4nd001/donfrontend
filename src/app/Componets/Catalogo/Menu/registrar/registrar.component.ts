@@ -2,12 +2,11 @@ import { Component,OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { LoginService  } from "../../../../Services/Login/login.service";
 import { Router } from '@angular/router';
-import { MenuService } from "../../../../Services/Catalogo/Menu/menu.service";
-import { UsuarioService } from 'src/app/Services/Catalogo/Usuarios/usuario.service';
 import { AlertServerService } from 'src/app/Services/Alert/alert-server.service';
 import { MatDialog } from '@angular/material/dialog';
 import {  DetallesComponent} from "../detalles/detalles.component";
 import { ServicesService } from "../../../Plantillas/services/services.service";
+import {GenerarService} from "../../../../Services/Catalogo/Generar/generar.service";
 @Component({
   selector: 'app-registrar',
   templateUrl: './registrar.component.html',
@@ -25,15 +24,15 @@ export class RegistrarComponent implements OnInit{
   public datos: any = {};
   public data:any={};
   public datosMenu : any = '';
+  public envio: any = {};
 
   constructor(
     private _LoginService : LoginService,
     public router: Router,
-    private _MenuService:MenuService,
-    private _UsuarioService:UsuarioService,  
     private _serviceAlert: AlertServerService,
     private dialog: MatDialog,
-    private _ServicesService:ServicesService
+    private _ServicesService:ServicesService,
+    private _GenerarService:GenerarService
   ){}
   
   ngOnInit(): void {
@@ -52,7 +51,9 @@ export class RegistrarComponent implements OnInit{
   }
 
   getEditarRegistro(){
-    this._MenuService.getDetalle(this.ecodMenu).then((response:any)=>{  
+    this.envio.data=this.ecodMenu
+    this.envio.urls="Catalogo/menu/detalles";
+    this._GenerarService.getDetalle(this.envio).then((response:any)=>{  
       this.datosMenu = (response.sqlMenu);   
       this.datos.tNombre = this.datosMenu.tNombre;        
       this.datos.Iicons = this.datosMenu.Iconos;     
@@ -92,8 +93,11 @@ export class RegistrarComponent implements OnInit{
             this.data.Menu.ecodMenu = this.datos.ecodMenu;
             this.data.datosMenu= this.datosMenu;
             this.data.Menu.EcodEstatus=this.datos.EcodEstatus;
-            this._MenuService.postRegistrar(this.data).then((response:any)=>{              
-              this._MenuService.getDetalle(response[0].Codigo).then((response:any)=>{
+            this.data.urls="Catalogo/menu/registrar";
+            this._GenerarService.postRegistrar(this.data).then((response:any)=>{ 
+              this.envio.data=response[0].Codigo
+              this.envio.urls="Catalogo/menu/detalles";
+              this._GenerarService.getDetalle(this.envio).then((response:any)=>{
                 let dialogRef = this.dialog.open(DetallesComponent, {
                   data: { titulo: "Detalle de Menu",Menu:response.sqlMenu}
                 });  
